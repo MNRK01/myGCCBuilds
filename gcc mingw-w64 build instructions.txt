@@ -5,30 +5,33 @@
  5) Run msys2.exe, run `pacman -Syuu` at the msys2 prompt until all the packages are updated
 #   {msys2-devel, mingw-w64-i686-toolchain, mingw-w64-x86_64-toolchain} install the necessary gcc later during the building process
  6) `pacman -S base-devel vim`
-#   The next set of packages do not need to be installed until Step 21 (./build --help) is run later
+#   The next set of packages do not need to be installed until when Step 21 (./build --help) is run later
  7) `pacman -S subversion zip p7zip sshpass dejagnu`
  8) `pacman -Scc` to clean up the install [optional]
- 9) `cd /home && mkdir <user>`
-10) `HOME=/home/<user>` to prevent gcc from being built in some alternate %HOME%
+ 9) `cd /home && mkdir arkay7777`
+10) `HOME=/home/arkay7777` to prevent gcc from being built in some alternate %HOME%
 11) `echo $HOME` to test if $HOME is not some alternate %HOME%
-12) `cd` into your new $HOME
+12) `cd` into your new $HOME, verify location with `pwd`
 #   Use the DEVELOP branch and not the MASTER repository
 13) `cd && git clone --branch develop https://github.com/niXman/mingw-builds.git`
-#   patch was built via `diff -ur --exclude=toolchains --exclude='*git*' mingw-builds-orig/ mingw-builds/ > /path/to/mingw-builds.patch`
-14) `cd mingw-builds` and `patch -uN -p 1 --binary --verbose -d mingw-builds/ < /path/to/mingw-builds.patch`
+#   patch was built via `diff -ur --exclude=toolchains --exclude='*git*' mingw-builds-orig/ mingw-builds/ > '/path/to/gcc mingw-builds.patch'`
+#   use `patch --dry-run ...` to test if the patch applies first
+14) `cd mingw-builds` and `patch -uN -p 1 --binary --verbose -d mingw-builds/ < '/path/to/gcc mingw-builds.patch'`
 15) `ls` to check if <mingw-builds> directory was created
 16) `cd /` and `rm /MinGW` if it exists
 17) `echo $PATH` to check that the $PATH is not contaminated
 18) `gcc -v` to also ensure no gcc is on the $PATH
 19) `cd && cd mingw-builds`
 20) Turn off the power settings for the computer so that it doesn't go to sleep during the build
-21) `./build --help` to determine if (a) all necessary software is available (see Step 6) and (b) options for building gcc
+21) `./build --help` to determine if (a) all necessary software is available (see Steps 6 and 7) and (b) options for building gcc
+#   choose `--mode=gcc-X.Y.Z --rt-version=vN` from the list generated
 #   the build process adds the following flags, among others on its own:
 #   --cppflags='', --cflags='-O2 -pipe -fno-ident', --cxxflags='-O2 -pipe -fno-ident', --ldflags='-pipe -fno-ident -Wl,--large-address-aware'
 #   adding --use-lto causes the build to crash with undefined references to rpl_printf(...) and related IO functions
 #   the use of --static-gcc is unnecessary and was used to try to unsuccessfully build with --use-lto
 #   building i686 multilib gcc will result in the building of certain i686 and x86_64 libs so always build the i686 gcc first
-#   building i686 multilib will download i686 and x86_64 gcc toolchains into the mingw-builds folder as the first step
+#   building i686 multilib will download i686 and x86_64 gcc toolchains (e.g. i686-7.2.0-release-posix-sjlj-rt_v5-rev1.7z)
+#   into the mingw-builds\toolchains folder as the first step
 22) `./build --mode=gcc-8.2.0 --arch=i686 --threads=posix --exceptions=sjlj --enable-languages=c,c++,fortran --rt-version=v6 --jobs=4 --rev=0`
     `./build --mode=gcc-8.2.0 --arch=i686 --threads=win32 --exceptions=sjlj --enable-languages=c,c++,fortran --rt-version=v6 --jobs=4 --rev=0`
     `./build --mode=gcc-8.2.0 --arch=x86_64 --threads=posix --exceptions=seh --enable-languages=c,c++,fortran --rt-version=v6 --jobs=4 --rev=0`
@@ -36,4 +39,10 @@
 23) Wait for ~4 hours (i7-6600U) as each build finishes
 24) Turn on the power settings for the computer so that it goes to sleep after 20 minutes
 25) Reactivate McAfee's Real Time Scanning
-
+#   use p7zip to compress archives. Find the directory (e.g. mingw-gcc-8.3.0\i686-830-posix-sjlj-rt_v6-rev0\) to compress mingwNN folder
+#   -tFormat -m0=Algorithm -mx=CompressionLevel (5 is default, 9 is max), -mfb=# of Fast Bytes (Word Size),
+#   -md=Dictionary Size (32m=32 Megabytes), -ms=Set Solid Mode
+26) `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on i686-8.3.0-posix-sjlj-rt_v6-rev0.7z mingw32`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on i686-8.3.0-win32-sjlj-rt_v6-rev0.7z mingw32`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on x86_64-8.3.0-posix-seh-rt_v6-rev0.7z mingw64`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on x86_64-8.3.0-win32-seh-rt_v6-rev0.7z mingw64`
