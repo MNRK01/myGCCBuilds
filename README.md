@@ -1,7 +1,7 @@
 # myGCCBuilds
 my gcc builds based on mingw-builds
 
-These builds are based on the develop branch scripts from mingw-builds:
+These personal builds are based on the develop branch scripts from mingw-builds:
 
 https://github.com/niXman/mingw-builds/tree/develop
 
