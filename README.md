@@ -12,5 +12,5 @@ I have a minimal patch to:
 1) Disable x86_64 version of lto-test since it is failing although the i686 version of the same test is passing.
 2) Change the MINGW_W64_PKG_STRING string to reflect that I am building the packages
 
-These builds are made available as a community service.
+These personal builds are made available as a community service.
 
