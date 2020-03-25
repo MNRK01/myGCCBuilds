@@ -1,0 +1,64 @@
+ 1) Download the release and master from https://github.com/meganz/mingw-std-threads
+ 2) Unzip mingw-std-threads-a.b.c.zip into C:\Software\mingw-std-threads-a.b.c
+ 3) Download the utility_scripts from the github master as mingw-std-threads-master.zip and unzip to a subfolder under C:\Software\mingw-std-threads-a.b.c
+ 4) Edit Generate-StdLikeHeaders.ps1 in C:\Software\mingw-std-threads-a.b.c\utility_scripts to change '$gcc.WaitForExit()' to '$gcc.WaitForExit(20000)'
+ 5) Start an admin Powershell prompt
+ 6) `Set-ExecutionPolicy Unrestricted` to allow Powershell scripts to be executed
+ 7) `Get-ExecutionPolicy` to confirm status
+ 8) Check %PATH% with `$env:Path`
+ 9) `$env:Path="C:\Software\msys64\mingw32\bin;$env:Path"` to add gcc to the $env:Path. The specific gcc does not matter since
+    the path to the built-in gcc include dirs will be removed from the generated headers to make packaging with my gcc builds
+    easier. The built-in headers are always included, so there is no need to keep reincluding them! To verify the include path
+    for a gcc: `printf '#include <thread>\n\n' > test.cpp` and `cpp -v test.cpp > test.cpp.txt` and inspect the output for the
+    included directories search order.
+10) Verify that any gcc is on %PATH% with `$env:Path` and `g++ -v`. This is necessary to generate the <thread>, ... headers
+11) `cd C:\Software\mingw-std-threads-a.b.c\utility_scripts\`
+12) If the ps1 script hangs than enable debugging with `Get-PSDebug` and `Set-PSDebug -Trace 1`
+13) `.\Generate-StdLikeHeaders.ps1 -Interactive`
+    Folder for generated headers: `..`
+    Folder for gcc: <Enter>
+    Folder for mingw-std-threads headers: <Enter>
+    Folder for wrapper batch script for g++: <Enter>
+14) Verify that C:\Software\mingw-std-threads-a.b.c contains generated <thread>, <mutex>, <shared_mutex>, <future>, <condition_variable> headers.
+    The output from Generate-StdLikeHeaders.ps1 currently lists that 5 headers are generated. Verify this.
+15) Edit the generated <thread>, ... headers to remove any hard paths to the mingw-std-threads headers. e.g.
+    #pragma once
+    #include "..\..\..\lib\gcc\i686-w64-mingw32\9.3.0\include\c++\thread"
+    #include ".\mingw.thread.h"
+16) Create a folder with the original file structure at C:\Software/mingw-std-threads-a.b.c-orig
+17) Create a diff file for easy patching of the i686 mingw-std-threads version in the future. Do not recurse into irrelevant directories. You will need to edit the gcc version in the patch.
+    `diff -uN /c/Software/mingw-std-threads-a.b.c-orig /c/Software/mingw-std-threads-a.b.c > ~/Scripts/mingw-std-threads-i686-w64-mingw32-930.patch`
+18) Use sed to generate a diff file for easy patching of the x86_64 mingw-std-threads version in the future.
+    Generate x86_64 version patch.
+    `sed -e 's/i686/x86_64/' mingw-std-threads-i686-w64-mingw32-930.patch > mingw-std-threads-x86_64-w64-mingw32-930.patch`
+    Generate x86_64 and future gcc version patch.
+    `sed -e 's/i686/x86_64/' -e 's/9.3.0/10.0.0/' mingw-std-threads-i686-w64-mingw32-930.patch > mingw-std-threads-x86_64-w64-mingw32-1000.patch`
+19) Patch mingw-std-threads-a.b.c-orig to test the generated diff file
+    `patch -uN --dry-run --verbose -d /c/Software/mingw-std-threads-a.b.c-i686/ < ~/Scripts/mingw-std-threads-i686-w64-mingw32-930.patch`
+    `patch -uN --dry-run --verbose -d /c/Software/mingw-std-threads-a.b.c-x86_64/ < ~/Scripts/mingw-std-threads-x86_64-w64-mingw32-930.patch`
+20) Copy the generated headers to the appropriate gcc folders - NECESSARY for win32-sjlj or win32-seh builds, optional for posix-sjlj and posix-seh builds
+    /home = /c/Software/gcc-build/msys64/home
+    `mkdir /home/arkay7777/mingw-gcc-9.3.0/i686-930-posix-sjlj-rt_v7-rev0/mingw32/opt/include/mingw-std-threads`
+    `cp -ip /c/Software/mingw-std-threads-a.b.c-i686/* /home/arkay7777/mingw-gcc-9.3.0/i686-930-posix-sjlj-rt_v7-rev0/mingw32/opt/include/mingw-std-threads`
+    `mkdir /home/arkay7777/mingw-gcc-9.3.0/i686-930-win32-sjlj-rt_v7-rev0/mingw32/opt/include/mingw-std-threads`
+    `cp -ip /c/Software/mingw-std-threads-a.b.c-i686/* /home/arkay7777/mingw-gcc-9.3.0/i686-930-win32-sjlj-rt_v7-rev0/mingw32/opt/include/mingw-std-threads`
+    `mkdir /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-posix-seh-rt_v7-rev0/mingw64/opt/include/mingw-std-threads`
+    `cp -ip /c/Software/mingw-std-threads-a.b.c-x86_64/* /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-posix-seh-rt_v7-rev0/mingw64/opt/include/mingw-std-threads`
+    `mkdir /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-win32-seh-rt_v7-rev0/mingw64/opt/include/mingw-std-threads`
+    `cp -ip /c/Software/mingw-std-threads-a.b.c-x86_64/* /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-win32-seh-rt_v7-rev0/mingw64/opt/include/mingw-std-threads`
+    OR
+    `mkdir /c/Software/msys64/mingw32/opt/include/mingw-std-threads`
+    `cp -ip /c/Software/mingw-std-threads-a.b.c-i686/* /mingw32/opt/include/mingw-std-threads`
+    `mkdir /c/Software/msys64/mingw64/opt/include/mingw-std-threads`
+    `cp -ip /c/Software/mingw-std-threads-a.b.c-x86_64/* /mingw64/opt/include/mingw-std-threads`
+21) Open mintty with the appropriate gcc win32 build on the path. Note that CFLAGS and CXXFLAGS are gnu make environment variables that
+    may not be recognized by the direct invocation of gcc or by alternate build systems such as boost b2.exe. Use CPATH to pass flags to gcc directly.
+    `export CFLAGS="-I/mingw32/opt/include/mingw-std-threads" and `echo $CFLAGS`
+    `export CXXFLAGS="-I/mingw32/opt/include/mingw-std-threads" and `echo $CFLAGS`
+    OR
+    `export CFLAGS="-I/mingw64/opt/include/mingw-std-threads" and `echo $CFLAGS`
+    `export CXXFLAGS="-I/mingw64/opt/include/mingw-std-threads" and `echo $CFLAGS`
+    OR
+    `export CPATH=/mingw64/opt/include/mingw-std-threads` and `echo $CPATH`
+
+
