@@ -1,0 +1,83 @@
+ 1) Disable McAfee's (or any other antivirus) Real Time Scanning
+ 2) Verify gcc version with `gcc -v` as it affects the threading and exception handling model for the boost libraries to be built
+    The build process could be repeated for each gcc, e.g. x86_64_posix_seh, x86_64_win32_seh, i386_posix_sjlj, i386_win32_sjlj.
+    Practically, I'm building boost for x86_64_posix_seh and i386_posix_sjlj only as boost fails when building with a win32 thread model.
+    When building with i386_posix_sjlj gcc, make sure that that the correct gcc is on the path!
+    e.g. `export PATH=/c/Software/mingw32/bin:/usr/local/bin:/usr/bin:/bin:/c/Windows/System32:...`
+    See https://gist.github.com/sim642/29caef3cc8afaa273ce6 as a helpful document although it builds boost from a Windows cmd.exe prompt
+    `export PATH=/home/arkay7777/mingw-gcc-9.3.0/i686-930-posix-sjlj-rt_v7-rev0/mingw32/bin:/usr/local/bin:/usr/bin:/bin:/opt/bin:/c/Windows/System32:/c/Windows:/c/Windows/System32/Wbem:/c/Windows/System32/WindowsPowerShell/v1.0/:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl`
+    `export PATH=/home/arkay7777/mingw-gcc-9.3.0/x86_64-930-posix-seh-rt_v7-rev0/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/opt/bin:/c/Windows/System32:/c/Windows:/c/Windows/System32/Wbem:/c/Windows/System32/WindowsPowerShell/v1.0/:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl`
+    `export PATH=/home/arkay7777/mingw-gcc-9.3.0/i686-930-win32-sjlj-rt_v7-rev0/mingw32/bin:/usr/local/bin:/usr/bin:/bin:/opt/bin:/c/Windows/System32:/c/Windows:/c/Windows/System32/Wbem:/c/Windows/System32/WindowsPowerShell/v1.0/:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl`
+    `export PATH=/home/arkay7777/mingw-gcc-9.3.0/x86_64-930-win32-seh-rt_v7-rev0/mingw64/bin:/usr/local/bin:/usr/bin:/bin:/opt/bin:/c/Windows/System32:/c/Windows:/c/Windows/System32/Wbem:/c/Windows/System32/WindowsPowerShell/v1.0/:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl`
+ 3) For building win32 boost libraries, it is essential to generate <thread>, <mutex> and related headers since they are not available
+    for win32 builds. The reason is that the posix builds provide pthreads but the win32 builds do not. See
+    C:\Users\Rajdeep\Documents\Data\Scripts\mingw-std-threads-instructions.txt for how to install the headers and make them available.
+ 4) Download and unpack boost (e.g. boost_1_72_0.7z) into C:\Software\boost-build
+ 5) `cd /c/Software/boost-build/boost_1_72_0/`
+ 6) Run `./bootstrap.sh --help` and `./bootstrap.sh --show-libraries` to determine the next steps
+ 7) Build ./b2.exe. No need to put the bitness (e.g. x32 or x64) in the directory specificed by the prefix since boost builds both architectures!
+    `./bootstrap.sh --prefix="C:/Software/boost/boost_1_72_0_gcc930_posix_sjlj" --with-python-root="C:/Software/Anaconda3"`
+    `./bootstrap.sh --prefix="C:/Software/boost/boost_1_72_0_gcc930_posix_seh" --with-python-root="C:/Software/Anaconda3"`
+    `./bootstrap.sh --prefix="C:/Software/boost/boost_1_72_0_gcc930_win32_sjlj" --with-python-root="C:/Software/Anaconda3"`
+    `./bootstrap.sh --prefix="C:/Software/boost/boost_1_72_0_gcc930_win32_seh" --with-python-root="C:/Software/Anaconda3"`
+ 8) Verify that ./b2.exe exists via `ls`
+ 9) Run `./b2 --help` to see what options are available and `./b2 --clean` to make sure that we have a clean starting point
+10) Build boost and wait for 25 min per build. The cflags option is passed to the win32 builds so that they can use mingw-std-threads.
+    `./b2 -a -q link=static variant=release threading=multi install`
+    `./b2 -a -q link=static variant=release threading=multi install`
+    `./b2 -a -q cflags=-I/home/arkay7777/mingw-gcc-9.3.0/i686-930-win32-sjlj-rt_v7-rev0/mingw32/opt/include/mingw-std-threads/ link=static variant=release threading=multi install`
+    `./b2 -a -q cflags=-I/home/arkay7777/mingw-gcc-9.3.0/x86_64-930-win32-seh-rt_v7-rev0/mingw64/opt/include/mingw-std-threads/ link=static variant=release threading=multi install`
+    options specify build static, multithreaded, release libraries of 32- and 64-bit architecture. -q stops the build at the first failure.
+    -a specifies to rebuild everything (avoid caches). -cflags is used to send CFLAGS directives to gcc and g++.
+    Avoid building debug libraries as they 3-4x the size of the build. There are no ICU/Unicode libraries detected for Boost.Regex currently.
+    example options: toolset=gcc address-model=32 variant=debug,release link=static,shared threading=multi
+11) Verify that the installation occurred correctly
+    `cd /c/Software/boost/boost_1_72_0_gcc930_posix_sjlj`
+    `cd /c/Software/boost/boost_1_72_0_gcc930_posix_seh`
+    `cd /c/Software/boost/boost_1_72_0_gcc930_win32_sjlj`
+    `cd /c/Software/boost/boost_1_72_0_gcc930_win32_seh`
+    AND verify correct bitness of the 32- and 64-bit builds
+    `objdump -a /c/Software/boost/boost_1_72_0_gcc930_posix_sjlj/lib/libboost_regex-mgw93-mt-x32-1_72.a`
+    `objdump -a /c/Software/boost/boost_1_72_0_gcc930_posix_sjlj/lib/libboost_regex-mgw93-mt-x64-1_72.a`
+12) Create an archive with toplevel folder such as "boost_1_72_0_gcc930_posix_seh" by `cd /c/Software/boost`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on /c/Users/Rajdeep/Desktop/boost_1_72_0_gcc930_posix_sjlj-rev0.7z boost_1_72_0_gcc930_posix_sjlj/`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on /c/Users/Rajdeep/Desktop/boost_1_72_0_gcc930_posix_seh-rev0.7z boost_1_72_0_gcc930_posix_seh/`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on /c/Users/Rajdeep/Desktop/boost_1_72_0_gcc930_win32_sjlj-rev0.7z boost_1_72_0_gcc930_win32_sjlj/`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on /c/Users/Rajdeep/Desktop/boost_1_72_0_gcc930_win32_seh-rev0.7z boost_1_72_0_gcc930_win32_seh/`
+    or create an archive with "include" and "lib" as the toplevel directories
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on /c/Users/Rajdeep/Desktop/boost_1_72_0_gcc930_posix_sjlj-rev0.7z .`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on /c/Users/Rajdeep/Desktop/boost_1_72_0_gcc930_posix_seh-rev0.7z .`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on /c/Users/Rajdeep/Desktop/boost_1_72_0_gcc930_win32_sjlj-rev0.7z .`
+    `7za a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on /c/Users/Rajdeep/Desktop/boost_1_72_0_gcc930_win32_seh-rev0.7z .`
+13) For installing into a mingw-w64 gcc, copy folders from the boost install location to the appropriate gcc folders.
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_posix_sjlj/include/boost-1_72/ /home/arkay7777/mingw-gcc-9.3.0/i686-930-posix-sjlj-rt_v7-rev0/mingw32/opt/include/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_posix_sjlj/lib/ /home/arkay7777/mingw-gcc-9.3.0/i686-930-posix-sjlj-rt_v7-rev0/mingw32/opt/lib/boost-1_72`
+    `rm -r /home/arkay7777/mingw-gcc-9.3.0/i686-930-posix-sjlj-rt_v7-rev0/mingw32/opt/lib/boost-1_72/cmake/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_posix_seh/include/boost-1_72/ /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-posix-seh-rt_v7-rev0/mingw64/opt/include/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_posix_seh/lib/ /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-posix-seh-rt_v7-rev0/mingw64/opt/lib/boost-1_72`
+    `rm -r /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-posix-seh-rt_v7-rev0/mingw64/opt/lib/boost-1_72/cmake/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_win32_sjlj/include/boost-1_72/ /home/arkay7777/mingw-gcc-9.3.0/i686-930-win32-sjlj-rt_v7-rev0/mingw32/opt/include/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_win32_sjlj/lib/ /home/arkay7777/mingw-gcc-9.3.0/i686-930-win32-sjlj-rt_v7-rev0/mingw32/opt/lib/boost-1_72`
+    `rm -r /home/arkay7777/mingw-gcc-9.3.0/i686-930-win32-sjlj-rt_v7-rev0/mingw32/opt/lib/boost-1_72/cmake/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_win32_seh/include/boost-1_72/ /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-win32-seh-rt_v7-rev0/mingw64/opt/include/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_win32_seh/lib/ /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-win32-seh-rt_v7-rev0/mingw64/opt/lib/boost-1_72`
+    `rm -r /home/arkay7777/mingw-gcc-9.3.0/x86_64-930-win32-seh-rt_v7-rev0/mingw64/opt/lib/boost-1_72/cmake/`
+    OR
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_win32_sjlj/include/boost-1_72/ /mingw32/opt/include/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_win32_sjlj/lib/ /mingw32/opt/lib/boost-1_72`
+    `rm -r /mingw32/opt/lib/boost-1_72/cmake/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_posix_seh/include/boost-1_72/ /mingw64/opt/include/`
+    `cp -irp /c/Software/boost/boost_1_72_0_gcc930_posix_seh/lib/ /mingw64/opt/lib/boost-1_72`
+    `rm -r /mingw64/opt/lib/boost-1_72/cmake/`
+14) For compiling, set -m32 or -m64 when using win32-sjlj multilib enabled g++, set necessary includes
+    `g++ -m64 -Wall -O2 -I /mingw32/opt/include/boost-1_72/ -I /mingw32/opt/include/mingw-std-threads -c boost_floating_point_examples.cpp -o boost_floating_point_examples.o`
+15) Set -m32 or -m64 when using win32-sjlj multilib enabled g++, also ensure static linkage of gcc libs otherwise there will
+    confusion between 32 and 64 bit libraries for functions like cout.
+    `g++ -m64 -O2 -static -s -Wall -L/mingw32/opt/lib/ boost_floating_point_examples.o -o boost_floating_point_examples.exe`
+15) Test whether the executable is 32- or 64-bit
+    `file boost_floating_point_examples.exe`
+16) Look for DLL dependencies
+    `objdump -x boost_floating_point_examples.exe | grep -i "DLL Name"`
+17) Run executable!
+    `./boost_floating_point_examples.exe`
+
