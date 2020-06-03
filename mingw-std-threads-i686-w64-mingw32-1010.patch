@@ -1,0 +1,38 @@
+Common subdirectories: mingw-std-threads-1.0.0-orig/cmake_stdheaders_generator and mingw-std-threads-1.0.0/cmake_stdheaders_generator
+diff -uN mingw-std-threads-1.0.0-orig/condition_variable mingw-std-threads-1.0.0/condition_variable
+--- mingw-std-threads-1.0.0-orig/condition_variable	1969-12-31 18:00:00.000000000 -0600
++++ mingw-std-threads-1.0.0/condition_variable	2020-03-24 10:53:11.113457600 -0500
+@@ -0,0 +1,3 @@
++#pragma once
++#include "..\..\..\lib\gcc\i686-w64-mingw32\10.1.0\include\c++\condition_variable"
++#include ".\mingw.condition_variable.h"
+diff -uN mingw-std-threads-1.0.0-orig/future mingw-std-threads-1.0.0/future
+--- mingw-std-threads-1.0.0-orig/future	1969-12-31 18:00:00.000000000 -0600
++++ mingw-std-threads-1.0.0/future	2020-03-24 10:52:49.047334200 -0500
+@@ -0,0 +1,3 @@
++#pragma once
++#include "..\..\..\lib\gcc\i686-w64-mingw32\10.1.0\include\c++\future"
++#include ".\mingw.future.h"
+diff -uN mingw-std-threads-1.0.0-orig/mutex mingw-std-threads-1.0.0/mutex
+--- mingw-std-threads-1.0.0-orig/mutex	1969-12-31 18:00:00.000000000 -0600
++++ mingw-std-threads-1.0.0/mutex	2020-03-24 10:52:32.675106500 -0500
+@@ -0,0 +1,3 @@
++#pragma once
++#include "..\..\..\lib\gcc\i686-w64-mingw32\10.1.0\include\c++\mutex"
++#include ".\mingw.mutex.h"
+diff -uN mingw-std-threads-1.0.0-orig/shared_mutex mingw-std-threads-1.0.0/shared_mutex
+--- mingw-std-threads-1.0.0-orig/shared_mutex	1969-12-31 18:00:00.000000000 -0600
++++ mingw-std-threads-1.0.0/shared_mutex	2020-03-24 10:52:15.026615400 -0500
+@@ -0,0 +1,3 @@
++#pragma once
++#include "..\..\..\lib\gcc\i686-w64-mingw32\10.1.0\include\c++\shared_mutex"
++#include ".\mingw.shared_mutex.h"
+Common subdirectories: mingw-std-threads-1.0.0-orig/tests and mingw-std-threads-1.0.0/tests
+diff -uN mingw-std-threads-1.0.0-orig/thread mingw-std-threads-1.0.0/thread
+--- mingw-std-threads-1.0.0-orig/thread	1969-12-31 18:00:00.000000000 -0600
++++ mingw-std-threads-1.0.0/thread	2020-03-24 10:51:24.751557100 -0500
+@@ -0,0 +1,3 @@
++#pragma once
++#include "..\..\..\lib\gcc\i686-w64-mingw32\10.1.0\include\c++\thread"
++#include ".\mingw.thread.h"
+Common subdirectories: mingw-std-threads-1.0.0-orig/utility_scripts and mingw-std-threads-1.0.0/utility_scripts
