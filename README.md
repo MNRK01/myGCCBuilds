@@ -5,7 +5,7 @@ These personal builds are based on the develop branch scripts from mingw-builds:
 
 https://github.com/niXman/mingw-builds/tree/develop
 
-I have a text file with my build notes in the repository in case you would like to attempt a build on your own.
+I have added text files with my build notes as well as bash shell scripts in the repository in case you would like to attempt a build on your own.
 
 I have a minimal patch to:
 
