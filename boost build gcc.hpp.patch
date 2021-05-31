@@ -1,0 +1,12 @@
+--- boost/config/compiler/gcc.hpp.orig	2020-08-11 09:55:41.000000000 -0500
++++ boost/config/compiler/gcc.hpp	2021-02-28 10:52:12.247969400 -0600
+@@ -323,7 +323,8 @@
+ #  define BOOST_FALLTHROUGH __attribute__((fallthrough))
+ #endif
+ 
+-#if defined(__MINGW32__) && !defined(__MINGW64__)
++// RK, 2/27/2021, CXX11 headers are available through mingw-std-threads for __MINGW32__
++#if defined(__MINGW32__) && !defined(__MINGW64__) && !defined(MINGW_HAS_THREADS)
+ // Currently (March 2019) thread_local is broken on mingw for all current 32bit compiler releases, see
+ // https://sourceforge.net/p/mingw-w64/bugs/527/
+ // Not setting this causes program termination on thread exit.

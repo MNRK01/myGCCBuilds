@@ -1,0 +1,54 @@
+diff -ur icu-orig/source/config/mh-mingw icu/source/config/mh-mingw
+--- icu-orig/source/config/mh-mingw	2020-12-17 18:34:38.000000000 -0600
++++ icu/source/config/mh-mingw	2021-03-10 08:10:49.623912700 -0600
+@@ -82,18 +82,19 @@
+ endif
+ 
+ # Static library prefix and file extension
++STATIC_PREFIX=""
++LIBPREFIX=lib
+ LIBSICU = $(LIBPREFIX)$(STATIC_PREFIX)$(ICUPREFIX)
+ A = a
+ 
+ ## An import library is needed for z/OS and MSVC
+ IMPORT_LIB_EXT = .dll.a
+ 
+-LIBPREFIX=lib
+-
+ # Change the stubnames so that poorly working FAT disks and installation programs can work.
+ # This is also for backwards compatibility.
+-DATA_STUBNAME = dt
+-I18N_STUBNAME = in
++DATA_STUBNAME = data
++I18N_STUBNAME = i18n
++# STATIC_PREFIX_WHEN_USED=""
+ LIBICU = $(STATIC_PREFIX_WHEN_USED)$(ICUPREFIX)
+ 
+ #SH### copied from Makefile.inc
+diff -ur icu-orig/source/config/mh-mingw64 icu/source/config/mh-mingw64
+--- icu-orig/source/config/mh-mingw64	2020-12-17 18:34:38.000000000 -0600
++++ icu/source/config/mh-mingw64	2021-03-14 12:19:03.849000700 -0500
+@@ -82,18 +82,19 @@
+ endif
+ 
+ # Static library prefix and file extension
++STATIC_PREFIX=""
++LIBPREFIX=""
+ LIBSICU = lib$(LIBPREFIX)$(STATIC_PREFIX)$(ICUPREFIX)
+ A = a
+ 
+ ## An import library is needed for z/OS and MSVC
+ IMPORT_LIB_EXT = .dll.a
+ 
+-LIBPREFIX=
+-
+ # Change the stubnames so that poorly working FAT disks and installation programs can work.
+ # This is also for backwards compatibility.
+-DATA_STUBNAME = dt
+-I18N_STUBNAME = in
++DATA_STUBNAME = data
++I18N_STUBNAME = i18n
++# STATIC_PREFIX_WHEN_USED=""
+ LIBICU = $(STATIC_PREFIX_WHEN_USED)$(ICUPREFIX)
+ 
+ #SH### copied from Makefile.inc
