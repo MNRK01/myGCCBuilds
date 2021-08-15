@@ -6,9 +6,9 @@
 STARTTIME=$SECONDS
 
 # declare variables
-GCC_VER="10.3.0"
+GCC_VER="11.1.0"
 GCC_VER_CODE=${GCC_VER//./}
-MINGW_CRT="v8"
+MINGW_CRT="v9"
 REV="rev0"
 BOOST_VER="1_76_0"
 BOOST_VER_DOT=${BOOST_VER//_/.}
@@ -180,7 +180,7 @@ do
     # build b2.exe with --with-python-root and --with-python specified or else b2.exe will confuse between the Anaconda3 python and the mingw-w64 python.
     echo "Running boost bootstrap.sh for ${BUILD_ARCH}-${GCC_THREAD_EXCEPT}-${BITS}bit"
     # ./bootstrap.sh --prefix="$BOOST_DIR" --with-python-root="C:/OSRC/Anaconda3" --with-python="C:/OSRC/Anaconda3/python.exe" --with-icu=${ICU_INC_DIR} 1>>${BOOST_BUILD_LOG}
-    ./bootstrap.sh --prefix="$BOOST_DIR" --with-python-root="C:/OSRC/Anaconda3" --with-python="C:/OSRC/Anaconda3/python.exe" 1>>${BOOST_BUILD_LOG}
+    ./bootstrap.sh --with-toolset=gcc --prefix="$BOOST_DIR" --with-python-root="C:/OSRC/Anaconda3" --with-python="C:/OSRC/Anaconda3/python.exe" 1>>${BOOST_BUILD_LOG}
     # test if b2.exe was created
     [[ -e b2.exe ]] || die "b2.exe was not created. Exiting."
     # build boost

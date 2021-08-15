@@ -23,9 +23,9 @@ function die {
 ICU_VER="69.1"
 ICU_VER_CODE=${ICU_VER/./_}
 ICU_VER_URL=${ICU_VER/./-}
-GCC_VER="10.3.0"
+GCC_VER="11.1.0"
 GCC_VER_CODE=${GCC_VER//./}
-MINGW_CRT="v8"
+MINGW_CRT="v9"
 REV="rev0"
 
 # download and upzip libicu into C:/OSRC/libicu-${ICU_VER_CODE}
@@ -116,6 +116,7 @@ do
     elif [[ $THREAD == "win32" ]]; then
         # $MINGWSTDTHREADSDIR is set to opt/include/mingw-std-threads
         [[ -e ${GCC_PATH}/opt/include/mingw-std-threads ]] || die "No mingw-std-threads"
+        # use /usr/bin/cygpath.exe rather than the one found in /c/OSRC/Anaconda3/Library/usr/bin!
         MINGWSTDTHREADSDIR=$(cygpath.exe -m ${GCC_PATH}/opt/include/mingw-std-threads)
     fi
     export CPATH=$MINGWSTDTHREADSDIR

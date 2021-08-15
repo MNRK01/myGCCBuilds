@@ -1,0 +1,12 @@
+diff -ur '--exclude=toolchains' '--exclude=*git*' mingw-builds-orig/library/config.sh mingw-builds/library/config.sh
+--- mingw-builds-orig/library/config.sh	2020-05-07 18:32:47.785531700 -0500
++++ mingw-builds/library/config.sh	2020-05-07 18:45:25.575733900 -0500
+@@ -36,7 +36,7 @@
+ # **************************************************************************
+ 
+ MINGW_W64_BUILDS_VERSION="MinGW-W64-builds-5.0.0"
+-MINGW_W64_PKG_STRING="Built by MinGW-W64 project"
++MINGW_W64_PKG_STRING="Built by arkay7777 using scripts from mingw-builds"
+ 
+ # **************************************************************************
+ 
