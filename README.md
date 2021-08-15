@@ -5,7 +5,7 @@ These personal builds are based on the develop branch scripts from mingw-builds:
 
 https://github.com/niXman/mingw-builds/tree/develop
 
-I have added bash shell scripts and patches in the repository in case you would like to attempt a build on your own.
+I have added bash shell scripts and patches in the repository in case you would like to attempt a build on your own. You will need a functioning 64-bit [msys2](https://www.msys2.org/) environment via ```pacman -S base-devel vim subversion zip unzip p7zip sshpass dejagnu git perl``` to be able to use the scripts in this repo. 
 
 For gcc itself, I have a minimal patch to:
 
