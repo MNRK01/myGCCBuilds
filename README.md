@@ -9,7 +9,9 @@ For gcc itself, I have a minimal patch to:
 
 1) Change the MINGW_W64_PKG_STRING string to reflect that I am building the packages
 
-For the Win32 builds, I am including [mingw-std-threads](https://github.com/Jamaika1/mingw_std_threads) to provide C++11 functionality such as ```<thread>```, ```<mutex>``` and others as they are not available in non-posix (i.e. non-pthreads based) builds.
+I also provide Boost C++ Libraries and the GNU Scientific Library (GSL) in my recent builds.
+
+When I provided Win32 builds, I used to include [mingw-std-threads](https://github.com/Jamaika1/mingw_std_threads) to provide C++11 functionality such as ```<thread>```, ```<mutex>``` and others as they are not available in non-posix (i.e. non-pthreads based) builds. I am no longer providing these Win32 builds since I can no longer get mingw-std-threads to compile with gcc >= 11.1 due to the structure of mingw-std-threads leading to "previous declaration" errors during compilation with the C++11 threading headers. I have filed a [PR report](https://github.com/meganz/mingw-std-threads/issues/79) with that repository.
 
 These personal builds are made available as a community service.
 
