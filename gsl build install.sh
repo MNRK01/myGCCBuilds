@@ -16,13 +16,17 @@ function die {
 	exit $_retcode
 }
 
-# declare variables
-GSL_VER="2.7"
+# get variables from the calling environment or exit
+# GSL_VER="2.7"
+if [[ ! $GSL_VER ]]; then echo "GSL version not declared. Exiting..."; exit 1; fi
 GSL_VER_CODE=${GSL_VER//./_}
-GCC_VER="11.1.0"
+# GCC_VER="11.1.0"
+if [[ ! $GCC_VER ]]; then echo "GCC version not declared. Exiting..."; exit 1; fi
 GCC_VER_CODE=${GCC_VER//./}
-MINGW_CRT="v9"
-REV="rev0"
+# MINGW64_CRT="v9"
+if [[ ! $MINGW64_CRT ]]; then echo "Mingw-w64 runtime version not declared. Exiting..."; exit 1; fi
+# REV="0"
+if [[ ! $REV ]]; then echo "Mingw-w64 GCC revision number not declared. Exiting..."; exit 1; fi
 
 # record original path
 SYSPATH=$PATH
@@ -47,10 +51,10 @@ echo "------------------------------"
 ALLTARGS=(
 	          "i686-posix-sjlj-x32"
 	          "i686-posix-sjlj-x64"
-	          "i686-win32-sjlj-x32"
-	          "i686-win32-sjlj-x64"
+	          # "i686-win32-sjlj-x32"
+	          # "i686-win32-sjlj-x64"
 	          "x86_64-posix-seh-x64"
-	          "x86_64-win32-seh-x64"
+	          # "x86_64-win32-seh-x64"
 	     )
 
 for targ in "${ALLTARGS[@]}"
@@ -92,7 +96,7 @@ do
 	    MINGW32OR64="mingw64"
 	fi
 	# setup path for gcc to be used
-    GCC_PATH=/c/OSRC/gcc-build/msys64/home/arkay7777/mingw-gcc-${GCC_VER}/${ARCH}-${GCC_VER_CODE}-${THREAD}-${EXCEPT}-rt_${MINGW_CRT}-${REV}/${MINGW32OR64}
+    GCC_PATH=/c/OSRC/gcc-build/msys64/home/arkay7777/mingw-gcc-${GCC_VER}/${ARCH}-${GCC_VER_CODE}-${THREAD}-${EXCEPT}-rt_${MINGW64_CRT}-rev${REV}/${MINGW32OR64}
 	export PATH=${GCC_PATH}/bin:${SYSPATH}
 	echo $PATH >> $LOGFILE
 

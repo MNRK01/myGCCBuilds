@@ -1,6 +1,5 @@
-# this script assumes that a working installation of mingw_std_threads-a.b.c are available for i686 and x86_64.
-# this script also assumes that old patches are available in ~/Scripts.
-# see "~/Scripts/mingw_std_threads build instructions.txt" for details on how to build mingw_std_threads
+# this script installs <thread> and other C++11 features from github.com/Jamaika1/mingw_std_threads
+# by directly overwriting the corresponding headers provided by mingw-w64 gcc
 
 # **************************************************************************
 # set up
@@ -53,14 +52,24 @@ LOGFILE=$MINGW_STD_THREADS_DIR/../build.log
 echo "$GITSTATUS" > $LOGFILE
 echo "-----------------------" >> $LOGFILE
 
-# version of the new gcc
-GCC_VER='11.1.0'
+# patch the headers
+echo "Patching headers"
+# patch --dry-run --verbose -uN --binary -p 1 -d ./mingw_std_threads_Jamaika_orig/ < /c/Users/arkay7777/Documents/mingw-std-threads_Jamaika.patch
+patch --verbose -uN --binary -p 1 -d /c/OSRC/mingw_std_threads_Jamaika < /c/Users/arkay7777/Documents/mingw-std-threads_Jamaika-v2.patch >> $LOGFILE
+echo "-----------------------" >> $LOGFILE
+echo "-----------------------"
+
+# version of the new gcc, obtain from the calling environment or exit
+# GCC_VER='11.2.0'
+if [[ ! $GCC_VER ]]; then echo "GCC version not declared. Exiting..."; exit 1; fi
 # generates a numeric sequence from $GCC_VER without any periods, e.g. 10.1.0 => 1010, which is useful for directory names
 GCC_VER_NODOT=${GCC_VER//./}
 
-# mingw-w64 crt runtime version of mingw-w64 and revision of the build
-RUNTIME='v9'
-REV='rev0'
+# mingw-w64 crt runtime version of mingw-w64 and revision of the build, obtain from the calling environment or exit
+# MINGW64_CRT='v9'
+if [[ ! $MINGW64_CRT ]]; then echo "Mingw-w64 runtime version not declared. Exiting..."; exit 1; fi
+# REV='0'
+if [[ ! $REV ]]; then echo "Mingw-w64 GCC revision number not declared. Exiting..."; exit 1; fi
 
 # define targets to make, any posix builds already have functional C++11 via pthreads, so they will not be fixed
 ALLTARGS=(
@@ -89,7 +98,7 @@ do
 	fi
 
     # location of GCC C++ include directory
-    GCC_ROOT="/c/OSRC/gcc-build/msys64/home/arkay7777/mingw-gcc-$GCC_VER/$ARCH-$GCC_VER_NODOT-$THREAD-$EXCEPT-rt_$RUNTIME-$REV/mingw$BITS"
+    GCC_ROOT="/c/OSRC/gcc-build/msys64/home/arkay7777/mingw-gcc-$GCC_VER/$ARCH-$GCC_VER_NODOT-$THREAD-$EXCEPT-rt_$MINGW64_CRT-rev$REV/mingw$BITS"
     GCC_INCL="$GCC_ROOT/lib/gcc/${ARCH}-w64-mingw32/${GCC_VER}/include/c++"
     [[ -d $GCC_INCL ]] || die "$GCC_INCL directory does not exist. Exiting."
 

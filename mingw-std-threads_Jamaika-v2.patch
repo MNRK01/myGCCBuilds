@@ -1,0 +1,91 @@
+diff -w -ur '--exclude=*.log' '--exclude=.git' mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/bits/std_thread.h mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/bits/std_thread.h
+--- mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/bits/std_thread.h	2021-12-26 12:55:14.260613600 -0600
++++ mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/bits/std_thread.h	2021-12-26 13:02:11.346410700 -0600
+@@ -330,7 +330,7 @@
+     ~thread()
+     {
+       if (joinable())
+-	    std::__terminate();
++	    std::terminate();
+     }
+ 
+     thread(const thread&) = delete;
+@@ -343,7 +343,7 @@
+     thread& operator=(thread&& __t) noexcept
+     {
+       if (joinable())
+-        std::__terminate();
++        std::terminate();
+       swap(__t);
+       return *this;
+     }
+@@ -379,7 +379,7 @@
+             std::printf("Error: Must join() or detach() a thread before \
+ destroying it.\n");
+ #endif
+-            std::__terminate();
++            std::terminate();
+         }
+     }
+     thread& operator=(const thread&) = delete;
+@@ -391,7 +391,7 @@
+             std::printf("Error: Must join() or detach() a thread before \
+ moving another thread to it.\n");
+ #endif
+-            std::__terminate();
++            std::terminate();
+         }
+         swap(std::forward<thread>(__t));
+         return *this;
+diff -w -ur '--exclude=*.log' '--exclude=.git' mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/bits/this_thread_sleep.h mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/bits/this_thread_sleep.h
+--- mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/bits/this_thread_sleep.h	2021-12-26 12:55:14.262609900 -0600
++++ mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/bits/this_thread_sleep.h	2021-12-26 13:01:46.464194600 -0600
+@@ -33,7 +33,7 @@
+ #pragma GCC system_header
+ 
+ #if __cplusplus >= 201103L
+-#include <bits/chrono.h> // std::chrono::*
++#include <chrono> // std::chrono::*
+ 
+ #ifdef _GLIBCXX_USE_NANOSLEEP
+ # include <cerrno>  // errno, EINTR
+diff -w -ur '--exclude=*.log' '--exclude=.git' mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/condition_variable mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/condition_variable
+--- mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/condition_variable	2021-12-26 12:55:14.263606300 -0600
++++ mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/condition_variable	2021-12-26 13:01:46.472175000 -0600
+@@ -35,7 +35,8 @@
+ # include <bits/c++0x_warning.h>
+ #else
+ 
+-#include <bits/chrono.h>
++#include <chrono>
++
+ #include <bits/std_mutex.h>
+ #include <bits/unique_lock.h>
+ #include <bits/alloc_traits.h>
+diff -w -ur '--exclude=*.log' '--exclude=.git' mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/mutex mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/mutex
+--- mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/mutex	2021-12-26 12:55:14.265601500 -0600
++++ mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/mutex	2021-12-26 13:01:46.477167900 -0600
+@@ -36,10 +36,10 @@
+ #else
+ 
+ #include <tuple>
++#include <chrono>
+ #include <exception>
+ #include <type_traits>
+ #include <system_error>
+-#include <bits/chrono.h>
+ #include <bits/std_mutex.h>
+ #include <bits/unique_lock.h>
+ #ifndef _GLIBCXX_HAS_GTHREADS
+diff -w -ur '--exclude=*.log' '--exclude=.git' mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/shared_mutex mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/shared_mutex
+--- mingw_std_threads_Jamaika_orig/mingw_std_threads/m64-1200/include/c++/12.0.0/shared_mutex	2021-12-26 12:55:14.267598700 -0600
++++ mingw_std_threads_Jamaika/mingw_std_threads/m64-1200/include/c++/12.0.0/shared_mutex	2021-12-26 13:01:46.481610100 -0600
+@@ -33,7 +33,7 @@
+ 
+ #if __cplusplus >= 201402L
+ 
+-#include <bits/chrono.h>
++#include <chrono>
+ #include <bits/functexcept.h>
+ #include <bits/move.h>        // move, __exchange
+ #include <bits/std_mutex.h>   // defer_lock_t
