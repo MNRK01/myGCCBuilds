@@ -5,7 +5,7 @@
  #endif
  
 -#if (!defined(_GLIBCXX_HAS_GTHREADS) || !defined(_GLIBCXX_USE_C99_STDINT_TR1))
-+// RK, 2/27/2021, CXX11 headers are available through mingw-std-threads which does not define _GLIBCXX_HAS_GTHREADS
++// arkay7777, 2/27/2021, CXX11 headers are available through mingw-std-threads which does not define _GLIBCXX_HAS_GTHREADS
 +#if ((!defined(_GLIBCXX_HAS_GTHREADS) || !defined(_GLIBCXX_USE_C99_STDINT_TR1))) && (!defined(MINGW_HAS_THREADS))
     // Headers not always available:
  #  ifndef BOOST_NO_CXX11_HDR_CONDITION_VARIABLE

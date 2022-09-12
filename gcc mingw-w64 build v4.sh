@@ -18,7 +18,7 @@ cd /mingw 1>/dev/null 2>&1 || ( [[ `echo $?` != 0 ]]  && echo "No /mingw directo
 # see https://docs.python.org/3/install/ for how python uses distutils and setup.py to build modules
 cd && patch -uN -p 1 --binary --dry-run --verbose -d mingw-builds/ < '/c/Users/arkay7777/Documents/gcc mingw-builds v2.patch'
 cd && patch -uN -p 1 --binary --verbose -d mingw-builds/ < '/c/Users/arkay7777/Documents/gcc mingw-builds v2.patch'
-cp -ip /c/Users/arkay7777/Documents/gcc-python3-distutils-cfg-v2.patch ./mingw-builds/patches/Python3/0200-RK-distutils-cfg.patch
+cp -ip /c/Users/arkay7777/Documents/gcc-python3-distutils-cfg-v2.patch ./mingw-builds/patches/Python3/0200-arkay7777-distutils-cfg.patch
 cd && patch -uN --binary --dry-run --verbose -d mingw-builds/scripts/ < '/c/Users/arkay7777/Documents/gcc-python3-build-script v1.patch'
 cd && patch -uN --binary --verbose -d mingw-builds/scripts/ < '/c/Users/arkay7777/Documents/gcc-python3-build-script v1.patch'
 # there should be no gcc on $PATH
@@ -27,8 +27,8 @@ echo $PATH
 gcc -v 1>/dev/null 2>&1 || ( [[ `echo $?` != 0 ]]  && echo "No gcc on the path (good)." )
 #################################################
 # set key environment variables for the commands below. check `./build --help` below and various websites for latest version info
-export GCC_VER='11.3.0'
-export MINGW64_CRT='v9'
+export GCC_VER='12.1.0'
+export MINGW64_CRT='v10'
 export BUILD_CRT='msvcrt'
 export REV='0'
 export ICU_VER='71.1'

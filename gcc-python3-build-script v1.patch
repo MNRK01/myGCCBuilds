@@ -4,7 +4,7 @@
  
  PKG_PATCHES=(
  	python3/0100-get-libraries-tuple-append-list.patch
-+	python3/0200-RK-distutils-cfg.patch
++	python3/0200-arkay7777-distutils-cfg.patch
  )
  
  #

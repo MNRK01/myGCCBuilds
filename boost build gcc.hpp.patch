@@ -5,7 +5,7 @@
  #endif
  
 -#if defined(__MINGW32__) && !defined(__MINGW64__)
-+// RK, 2/27/2021, CXX11 headers are available through mingw-std-threads for __MINGW32__
++// arkay7777, 2/27/2021, CXX11 headers are available through mingw-std-threads for __MINGW32__
 +#if defined(__MINGW32__) && !defined(__MINGW64__) && !defined(MINGW_HAS_THREADS)
  // Currently (March 2019) thread_local is broken on mingw for all current 32bit compiler releases, see
  // https://sourceforge.net/p/mingw-w64/bugs/527/
