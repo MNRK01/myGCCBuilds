@@ -1,0 +1,6 @@
+diff -uNr Lib/distutils/distutils.cfg Lib/distutils/distutils.cfg
+--- Lib/distutils/distutils.cfg	1969-12-31 18:00:00.000000000 -0600
++++ Lib/distutils/distutils.cfg	2022-09-10 14:56:52.095248000 -0500
+@@ -0,0 +1,2 @@
++[build]
++build-base=C:/OSRC/gcc-build/pybuild

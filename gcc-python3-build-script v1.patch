@@ -1,0 +1,42 @@
+--- mingw-builds-orig/scripts/python-3.sh	2022-09-10 23:25:34.405823100 -0500
++++ mingw-builds/scripts/python-3.sh	2022-09-11 15:05:49.663634300 -0500
+@@ -55,6 +55,7 @@
+ 
+ PKG_PATCHES=(
+ 	python3/0100-get-libraries-tuple-append-list.patch
++	python3/0200-RK-distutils-cfg.patch
+ )
+ 
+ #
+@@ -78,6 +79,7 @@
+ }
+ 
+ LIBFFI_VERSION=$( grep 'PKG_VERSION=' $TOP_DIR/scripts/libffi.sh | sed 's|PKG_VERSION=||' )
++LIBFFI_INCLUDEDIR="$LIBSW_DIR/lib/libffi-$LIBFFI_VERSION/include"
+ MY_CPPFLAGS="-I$LIBSW_DIR/include -I$LIBSW_DIR/include/ncursesw -I$PREREQW_DIR/$BUILD_ARCHITECTURE-zlib-$LINK_TYPE_SUFFIX/include"
+ 
+ # Workaround for conftest error on 64-bit builds
+@@ -100,11 +102,11 @@
+ 	--without-c-locale-coercion
+ 	# --with-tzpath=$LIBS_DIR/share/zoneinfo
+ 	--enable-optimizations
++	--with-libs=\'-lole32 -loleaut32 -luuid -lssl -lcrypto -lffi\'
+ 	#
+-	LIBFFI_INCLUDEDIR="$LIBSW_DIR/lib/libffi-$LIBFFI_VERSION/include"
+-	CFLAGS="\"$COMMON_CFLAGS -D__USE_MINGW_ANSI_STDIO=1\""
+-	CPPFLAGS="\"$COMMON_CPPFLAGS $MY_CPPFLAGS\""
+-	LDFLAGS="\"$COMMON_LDFLAGS -L$PREREQW_DIR/$BUILD_ARCHITECTURE-zlib-$LINK_TYPE_SUFFIX/lib -L$LIBSW_DIR/lib\""
++	CFLAGS="\"$COMMON_CFLAGS -D__USE_MINGW_ANSI_STDIO=1 -I$LIBFFI_INCLUDEDIR -I$LIBSW_DIR/include -I$LIBSW_DIR/include/openssl\""
++	CPPFLAGS="\"$COMMON_CPPFLAGS $MY_CPPFLAGS -I$LIBFFI_INCLUDEDIR\""
++	LDFLAGS="\"$COMMON_LDFLAGS -L$PREREQW_DIR/$BUILD_ARCHITECTURE-zlib-$LINK_TYPE_SUFFIX/lib -L$LIBSW_DIR/lib -L$LIBSW_DIR/../i686-w64-mingw32/lib\""
+ )
+ 
+ #
+@@ -132,6 +134,7 @@
+ 
+ PKG_EXECUTE_AFTER_INSTALL=(
+ 	"$RM_PYTHON_TEST_DIR_CMD"
++	"[[ -e /c/OSRC/gcc-build/pybuild ]] && rm -rf /c/OSRC/gcc-build/pybuild"
+ )
+ 
+ # **************************************************************************
