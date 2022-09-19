@@ -8,26 +8,27 @@
 pacman -Syuu
 export HOME=/home/arkay7777/
 cd
-rm -rf mingw-gcc-11.3.0/ mingw-builds/
+rm -rf mingw-gcc-12.1.0/ mingw-builds/
 [[ -e mingw-builds-orig/ ]] && rm -rf mingw-builds-orig/
 cd && git clone --branch develop https://github.com/niXman/mingw-builds.git
 cp -rp mingw-builds/ mingw-builds-orig/
 # should fail and echo "no /mingw"
 cd /mingw 1>/dev/null 2>&1 || ( [[ `echo $?` != 0 ]]  && echo "No /mingw directory found (good)." )
 # apply patches
-# see https://docs.python.org/3/install/ for how python uses distutils and setup.py to build modules
 cd && patch -uN -p 1 --binary --dry-run --verbose -d mingw-builds/ < '/c/Users/arkay7777/Documents/gcc mingw-builds v2.patch'
 cd && patch -uN -p 1 --binary --verbose -d mingw-builds/ < '/c/Users/arkay7777/Documents/gcc mingw-builds v2.patch'
-cp -ip /c/Users/arkay7777/Documents/gcc-python3-distutils-cfg-v2.patch ./mingw-builds/patches/Python3/0200-arkay7777-distutils-cfg.patch
-cd && patch -uN --binary --dry-run --verbose -d mingw-builds/scripts/ < '/c/Users/arkay7777/Documents/gcc-python3-build-script v1.patch'
-cd && patch -uN --binary --verbose -d mingw-builds/scripts/ < '/c/Users/arkay7777/Documents/gcc-python3-build-script v1.patch'
+# python3 patches. see https://docs.python.org/3/install/ for how python uses distutils and setup.py to build modules
+cp -ip '/c/Users/arkay7777/Documents/gcc-python3-configure-script v1.patch' ./mingw-builds/patches/Python3/0200-arkay7777-configure-script.patch
+cp -ip '/c/Users/arkay7777/Documents/gcc-python3-distutils-cfg v1.patch' ./mingw-builds/patches/Python3/0300-arkay7777-distutils-cfg.patch
+cd && patch -uN --binary --dry-run --verbose -d mingw-builds/scripts/ < '/c/Users/arkay7777/Documents/gcc-python3-build-script v2.patch'
+cd && patch -uN --binary --verbose -d mingw-builds/scripts/ < '/c/Users/arkay7777/Documents/gcc-python3-build-script v2.patch'
 # there should be no gcc on $PATH
 echo $PATH
 # should fail and echo "no gcc"
 gcc -v 1>/dev/null 2>&1 || ( [[ `echo $?` != 0 ]]  && echo "No gcc on the path (good)." )
 #################################################
 # set key environment variables for the commands below. check `./build --help` below and various websites for latest version info
-export GCC_VER='12.1.0'
+export GCC_VER='12.2.0'
 export MINGW64_CRT='v10'
 export BUILD_CRT='msvcrt'
 export REV='0'
