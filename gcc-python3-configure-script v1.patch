@@ -1,17 +1,31 @@
---- configure.ac.orig	2022-09-15 00:48:19.941482900 -0500
-+++ configure.ac	2022-09-15 12:21:43.589058600 -0500
+--- configure.ac.orig	2022-09-20 21:01:52.767490200 -0500
++++ configure.ac	2022-09-20 21:17:49.127272600 -0500
 @@ -3402,8 +3402,13 @@
      with_system_ffi="yes"
  fi
  
 -if test "$with_system_ffi" = "yes" && test -n "$PKG_CONFIG"; then
-+if test "$with_system_ffi" = "yes" && test -n "$PKG_CONFIG" && test -z "${GCC_VER+set}" ; then
++if test "$with_system_ffi" = "yes" && test -n "$PKG_CONFIG" && test -z "${LIBFFI_INCLUDEDIR+set}" ; then
      LIBFFI_INCLUDEDIR="`"$PKG_CONFIG" libffi --cflags-only-I 2>/dev/null | sed -e 's/^-I//;s/ .*$//'`"
-+elif test "$with_system_ffi" = "yes" && test -n "$PKG_CONFIG" && test -n "${GCC_VER+set}" ; then
++elif test "$with_system_ffi" = "yes" && test -n "$PKG_CONFIG" && test -n "${LIBFFI_INCLUDEDIR+set}" ; then
 +    # arkay7777 - we are using a just-built libffi and not the system ffi. the above code forces $with_system_ffi = yes
 +    # and then the code below uses $PKG_CONFIG to try to find the system_ffi. this is incorrect, $LIBFFI_INCLUDEDIR is
 +    # specified in the configure script call
 +    :
  else
      LIBFFI_INCLUDEDIR=""
+ fi
+@@ -5596,8 +5601,12 @@
+   [Define if you have struct stat.st_mtimensec])
+ fi
+ 
+-if test -n "$PKG_CONFIG"; then
++if test -n "$PKG_CONFIG" && test -z "${NCURSESW_INCLUDEDIR+set}" ; then
+     NCURSESW_INCLUDEDIR="`"$PKG_CONFIG" ncursesw --cflags-only-I 2>/dev/null | sed -e 's/^-I//;s/ .*$//'`"
++elif test -n "$PKG_CONFIG" && test -n "${NCURSESW_INCLUDEDIR+set}" ; then
++    # arkay7777 - we are using a just-built ncursesw and not the system ncurses lib. the above code uses $PKG_CONFIG
++    # to try to find the system ncurses. this is incorrect, $NCURSESW_INCLUDEDIR is specified in the configure script call
++    :
+ else
+     NCURSESW_INCLUDEDIR=""
  fi

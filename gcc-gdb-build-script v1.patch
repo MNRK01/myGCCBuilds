@@ -1,0 +1,24 @@
+--- mingw-builds-orig/scripts/gdb.sh	2023-05-29 10:30:07.797565400 -0500
++++ mingw-builds/scripts/gdb.sh	2023-06-10 19:36:20.753390200 -0500
+@@ -55,9 +55,12 @@
+ 	$( [[ ${PKG_VERSION} == 7.12 ]] && { echo "gdb/gdb-7.12-fix-using-gnu-print.patch"; } || { echo "gdb/gdb-fix-using-gnu-print.patch"; } )
+ 	$( [[ ${PKG_VERSION} == 7.12 ]] && { echo "gdb/gdb-7.12-dynamic-libs.patch"; } || { echo "gdb/gdb-8.3.1-dynamic-libs.patch"; } )
+ 	$( [[ ${PKG_VERSION} == 10.2 ]] && { echo "gdb/gdb-10.2-fix-gnulib-dependencies.patch"; } )
++	gdb/900-gdb-curses-h.patch
+ )
+ 
+ #
++# arkay7777 patch for term.h
++NCURSESW_INCLUDEDIR="$LIBS_DIR/include/ncursesw"
+ 
+ PKG_CONFIGURE_FLAGS=(
+ 	--host=$HOST
+@@ -83,7 +86,7 @@
+ 	# the _WIN32_WINNT hack here because of: https://sourceware.org/pipermail/gdb/2022-November/050432.html
+ 	CFLAGS="\"$COMMON_CFLAGS -D__USE_MINGW_ANSI_STDIO=1 -fcommon -D_WIN32_WINNT=0x0601\""
+ 	CXXFLAGS="\"$COMMON_CXXFLAGS -D__USE_MINGW_ANSI_STDIO=1 -D_WIN32_WINNT=0x0601\""
+-	CPPFLAGS="\"$COMMON_CPPFLAGS\""
++	CPPFLAGS="\"$COMMON_CPPFLAGS -I$NCURSESW_INCLUDEDIR\""
+ 	LDFLAGS="\"$COMMON_LDFLAGS $( [[ $BUILD_ARCHITECTURE == i686 ]] && echo -Wl,--large-address-aware )\""
+ )
+ 

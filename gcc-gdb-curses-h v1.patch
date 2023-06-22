@@ -1,0 +1,11 @@
+--- a/gdb/gdb_curses.h	2023-06-10 16:33:10.087937100 -0500
++++ b/gdb/gdb_curses.h	2023-06-10 16:35:18.471639000 -0500
+@@ -53,7 +53,7 @@
+ 
+ #if defined (HAVE_NCURSES_TERM_H)
+ #include <ncurses/term.h>
+-#elif defined (HAVE_SYS_TERM_H)
++#elif defined (HAVE_TERM_H) && !defined(__MINGW32__)
+ #include <term.h>
+ #else
+ /* On MinGW, a real termcap library is usually not present.  Stub versions

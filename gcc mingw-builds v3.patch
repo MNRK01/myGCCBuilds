@@ -1,0 +1,24 @@
+diff -ur mingw-builds-orig/build mingw-builds/build
+--- mingw-builds-orig/build	2023-05-29 10:30:07.092729300 -0500
++++ mingw-builds/build	2023-06-19 14:26:14.306303200 -0500
+@@ -239,7 +239,7 @@
+ 				dwarf) USE_MULTILIB=no ;;
+ 				seh) USE_MULTILIB=no ;;
+ 				dwarfseh) USE_MULTILIB=no ;;
+-				sjlj) USE_MULTILIB=$USE_MULTILIB ;;
++				sjlj) USE_MULTILIB=yes ;;
+ 				*)
+ 					die "\"$EXCEPTIONS_MODEL\" is not valid exception model. available models: dwarf, seh, sjlj. terminate."
+ 				;;
+diff -ur mingw-builds-orig/library/config.sh mingw-builds/library/config.sh
+--- mingw-builds-orig/library/config.sh	2023-05-29 10:30:07.106705800 -0500
++++ mingw-builds/library/config.sh	2023-05-29 10:32:10.339549500 -0500
+@@ -36,7 +36,7 @@
+ # **************************************************************************
+ 
+ MINGW_W64_BUILDS_VERSION="MinGW-W64-builds-5.0.0"
+-MINGW_W64_PKG_STRING="Built by MinGW-Builds project"
++MINGW_W64_PKG_STRING="Built by arkay7777 using scripts from MinGW-Builds project"
+ 
+ # **************************************************************************
+ 
