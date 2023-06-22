@@ -8,6 +8,7 @@ I have added bash shell scripts and patches in the repository in case you would 
 For gcc itself, I have a minimal patch to:
 
 1) Change the MINGW_W64_PKG_STRING string to reflect that I am building the packages
+2) Make sjlj builds multilib
 
 I also provide Boost C++ Libraries and the GNU Scientific Library (GSL) in my recent builds.
 
