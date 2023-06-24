@@ -149,7 +149,6 @@ do
     # specify boost directory. note the need to use "${BOOST_VER}" and "${GCC_VER_CODE}" since they are surrounded by underscores which
     # are interpreted literally and so bash expects a variable called "$BOOST_VER_gcc"
     BOOST_DIR=C:/OSRC/boost/boost_${BOOST_VER}_gcc${GCC_VER_CODE}_${GCC_THREAD_EXCEPT_OSTYPE_DIR}_x${BITS}
-    # BOOST_DIR=C:/OSRC/boost/test
     [[ -e $BOOST_DIR ]] && rm -rf $BOOST_DIR
     mkdir $BOOST_DIR || die "Cannot mkdir ${BOOST_DIR}"
 
@@ -182,7 +181,7 @@ do
     # ./b2 -a -q cflags="-I${ICU_INC_DIR} -DU_STATIC_IMPLEMENTATION" cxxflags="-std=c++17" linkflags="-L${ICU_LIB_DIR}" link=static variant=release threading=multi install --without-mpi --without-graph_parallel 1>>${BOOST_BUILD_LOG}
     # ./b2 -a -q -j 4 --prefix="$BOOST_DIR" --includedir="$BOOST_DIR/include" --debug-configuration toolset=gcc address-model=$BITS link=static variant=release threading=multi install --without-mpi --without-graph_parallel 1>>${BOOST_BUILD_LOG}
     # ./b2 -a -j4 -d+5 cxxflags="-DMINGW_HAS_THREADS -DU_STATIC_IMPLEMENTATION -I$ICU_INC_DIR" linkflags="-L$ICU_LIB_DIR" toolset=gcc address-model=$BITS link=static variant=release threading=multi install --without-mpi --without-graph_parallel --no-cmake-config 1>>${BOOST_BUILD_LOG}
-    # don't use the -q argument as it causes the headers to not be generated in the <include> folder
+    # don't use the -q argument as it causes the headers generation to quit due to unknown errors. removing the -q argument apparently causes the headers to be generated as expected
     ./b2 -a -j4 --debug-configuration toolset=gcc address-model=$BITS link=static variant=release threading=multi install --without-mpi --without-graph_parallel --no-cmake-config 1>>${BOOST_BUILD_LOG}
     # test if boost was built to the right directory specified in bootstrap.sh above
     [[ -d ${BOOST_DIR} ]] || die "${BOOST_DIR} was not compiled correctly."

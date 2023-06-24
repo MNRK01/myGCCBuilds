@@ -53,7 +53,7 @@ cd /c/OSRC/libicu-${ICU_VER_CODE}/icu/source || die "Unzip was not successful"
 echo "Patching ICU4C."
 cd /c/OSRC/libicu-${ICU_VER_CODE}
 PATCHLOG=/c/OSRC/libicu-${ICU_VER_CODE}/icu/patch.log
-PATCH_OUT=$(patch -uN --verbose --binary -d ./icu/source/config < /c/Users/arkay7777/Documents/libicu-config.patch)
+PATCH_OUT=$(patch -uN --verbose --binary -r /dev/null -d ./icu/source/config < /c/Users/arkay7777/Documents/libicu-config.patch)
 if [ $? == 0 ]; then
     # need to quote to output newlines, https://stackoverflow.com/questions/613572/capturing-multiple-line-output-into-a-bash-variable
     echo "$PATCH_OUT" > ${PATCHLOG}

@@ -4,7 +4,7 @@
  
  #if defined (HAVE_NCURSES_TERM_H)
  #include <ncurses/term.h>
--#elif defined (HAVE_SYS_TERM_H)
+-#elif defined (HAVE_TERM_H)
 +#elif defined (HAVE_TERM_H) && !defined(__MINGW32__)
  #include <term.h>
  #else
